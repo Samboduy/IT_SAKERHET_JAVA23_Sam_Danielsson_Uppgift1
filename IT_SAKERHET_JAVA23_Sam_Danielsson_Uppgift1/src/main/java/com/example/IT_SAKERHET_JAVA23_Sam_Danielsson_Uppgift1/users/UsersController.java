@@ -1,15 +1,10 @@
 package com.example.IT_SAKERHET_JAVA23_Sam_Danielsson_Uppgift1.users;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 public class UsersController {
@@ -30,23 +25,29 @@ public class UsersController {
             MediaType.APPLICATION_ATOM_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE
     })
-    public void createUser(@RequestParam String email, String password,String adress,String postNumber) {
-        /*Users user = new Users();
-        user.setEmail(userObject.getString("email"));
-        user.setPassword(userObject.getString("password"));
-       String adress = userObject.getString("adress");
-       String postNumber = userObject.getString("postNumber");
-        if (!adress.isEmpty() && !postNumber.isEmpty()){
-            user.setAdress(adress);
-            user.setPostNumber(Long.parseLong(postNumber));
-        }
-
-       System.out.println(user);
-       Users savedUser = usersService.saveUser(user);
-       System.out.println("saved user: " + savedUser);
-       return new ResponseEntity<>(savedUser,HttpStatus.OK);*/
+    public void createUser(@RequestParam(value = "email")String email,
+                           @RequestParam(value = "password")String password,
+                           @RequestParam(value = "adress")String adress,
+                           @RequestParam(value = "postNumber")String postNumber){
         System.out.println(email +" " +  password+" " +adress+" " +postNumber);
+        Users user = new Users();
+        user.setEmail(email);
+        user.setAdress(adress);
+        user.setPassword(password);
+        user.setPostNumber(Long.parseLong(postNumber));
+        usersService.saveUser(user);
+        System.out.println(user.getId());
 
    }
+    @DeleteMapping(value = "/users/user/delete/{id}",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = {
+                    MediaType.APPLICATION_ATOM_XML_VALUE,
+                    MediaType.APPLICATION_JSON_VALUE
+            })
+    public void removeUser(@RequestParam(value = "id")String id){
+        usersService.deleteUser(Long.parseLong(id));
+        System.out.println(id);
+    }
 
 }

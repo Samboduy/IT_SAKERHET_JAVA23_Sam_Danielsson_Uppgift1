@@ -12,15 +12,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Client {
-    private static final String MY_URI = "http://localhost:8080/createUser";
+    private static final String MY_URI = "http://localhost:8080/users/user/delete/2";
     public static void main(String[] args) {
        // requestUserUsingEmail();
-        saveUser("email","password","adress","post");
+        //saveUser("sam.danielsson000@gmail.com","password","adress","23456");
+        deleteUser(2);
 
     }
     private static void requestUserUsingEmail(){
         HttpClient httpClient = HttpClient.newHttpClient();
         try{
+
             HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(MY_URI)).GET().build();
             HttpResponse<String> httpResponse = httpClient.send(httpRequest,HttpResponse.BodyHandlers.ofString());
             JSONObject jsonObject = new JSONObject(httpResponse.body());
@@ -29,7 +31,7 @@ public class Client {
 
             System.out.println("Response: " + httpResponse.statusCode() + " " +  httpResponse.body());
         } catch (Exception e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
     private static void saveUser(String email, String password, String adress,String postNumber){
@@ -61,7 +63,28 @@ public class Client {
             System.out.println(response.body());
           //  System.out.println(jsonObject.getString("email"));
         }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
 
+    }
+
+    private static void deleteUser(long id){
+        HttpClient httpClient = HttpClient.newHttpClient();
+
+        Map<String, String> formData = new HashMap<>();
+        formData.put("id", String.valueOf(id));
+
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(MY_URI)).
+                header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(getFormDataAsString(formData)))
+                .build();
+
+        try{
+            HttpResponse<String> response = httpClient.send(httpRequest,HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
+            //  System.out.println(jsonObject.getString("email"));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
 
     }
