@@ -39,14 +39,9 @@ public class UsersController {
         System.out.println(user.getId());
 
    }
-    @DeleteMapping(value = "/users/user/delete/{id}",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = {
-                    MediaType.APPLICATION_ATOM_XML_VALUE,
-                    MediaType.APPLICATION_JSON_VALUE
-            })
-    public void removeUser(@RequestParam(value = "id")String id){
-        usersService.deleteUser(Long.parseLong(id));
+    @DeleteMapping(value = "/users/user/delete/{id}")
+    public void removeUser(@PathVariable long id){
+        usersService.deleteUser(id);
         System.out.println(id);
     }
 

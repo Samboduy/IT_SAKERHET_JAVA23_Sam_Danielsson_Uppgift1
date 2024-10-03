@@ -1,8 +1,9 @@
-import jdk.jfr.ContentType;
-import org.json.JSONArray;
+
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,11 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Client {
-    private static final String MY_URI = "http://localhost:8080/users/user/delete/2";
+    private static final String MY_URI = "http://localhost:8080/users/user/delete/";
     public static void main(String[] args) {
        // requestUserUsingEmail();
         //saveUser("sam.danielsson000@gmail.com","password","adress","23456");
-        deleteUser(2);
+        deleteUser();
 
     }
     private static void requestUserUsingEmail(){
@@ -68,22 +69,23 @@ public class Client {
 
     }
 
-    private static void deleteUser(long id){
-        HttpClient httpClient = HttpClient.newHttpClient();
-
-        Map<String, String> formData = new HashMap<>();
-        formData.put("id", String.valueOf(id));
-
-        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(MY_URI)).
-                header("Content-Type", "application/x-www-form-urlencoded")
-                .POST(HttpRequest.BodyPublishers.ofString(getFormDataAsString(formData)))
-                .build();
-
+    private static void deleteUser(){
+        long userId = 2; // ID of the user to delete
+        // Update
         try{
-            HttpResponse<String> response = httpClient.send(httpRequest,HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.body());
-            //  System.out.println(jsonObject.getString("email"));
-        }catch (Exception e){
+            URL url = new URL("http://localhost:8080/users/user/delete/" + userId);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_NO_CONTENT) {
+                System.out.println("User deleted successfully.");
+            } else if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
+                System.out.println("User not found.");
+            } else {
+                System.out.println("Failed to delete user: " + responseCode);
+            }
+        } catch (Exception e){
             System.out.println(e.getMessage());
         }
 
