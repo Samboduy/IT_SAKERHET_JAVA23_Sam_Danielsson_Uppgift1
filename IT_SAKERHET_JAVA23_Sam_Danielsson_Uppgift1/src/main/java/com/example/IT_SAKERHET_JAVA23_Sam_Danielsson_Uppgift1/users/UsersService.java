@@ -2,6 +2,7 @@ package com.example.IT_SAKERHET_JAVA23_Sam_Danielsson_Uppgift1.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,11 @@ public class UsersService {
 
     public Users saveUser(Users user){
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser(long id){
+        userRepository.deleteById(id);
     }
 
 }
