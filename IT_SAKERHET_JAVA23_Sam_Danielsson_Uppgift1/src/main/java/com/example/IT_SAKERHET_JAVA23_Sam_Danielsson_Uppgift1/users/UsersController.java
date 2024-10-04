@@ -1,5 +1,6 @@
 package com.example.IT_SAKERHET_JAVA23_Sam_Danielsson_Uppgift1.users;
 
+import com.example.IT_SAKERHET_JAVA23_Sam_Danielsson_Uppgift1.HashPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,10 +31,13 @@ public class UsersController {
                            @RequestParam(value = "adress")String adress,
                            @RequestParam(value = "postNumber")String postNumber){
         System.out.println(email +" " +  password+" " +adress+" " +postNumber);
+        HashPassword hashPassword = new HashPassword();
+        String hashedPassword =  hashPassword.generateHash(password);
+
         Users user = new Users();
         user.setEmail(email);
         user.setAdress(adress);
-        user.setPassword(password);
+        user.setPassword(hashedPassword);
         user.setPostNumber(Long.parseLong(postNumber));
         usersService.saveUser(user);
         System.out.println(user.getId());
